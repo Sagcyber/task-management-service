@@ -4,9 +4,11 @@ import org.example.taskmanagement.dto.request.TaskRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.model.Task;
 import org.example.taskmanagement.model.TaskStatus;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 public class TaskMapper {
     
     public Task toEntity(TaskRequestDto dto) {

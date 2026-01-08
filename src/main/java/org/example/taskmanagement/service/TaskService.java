@@ -1,5 +1,6 @@
 package org.example.taskmanagement.service;
 
+import org.example.taskmanagement.dto.request.TaskRequestDto;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.Task;
 import org.example.taskmanagement.model.TaskStatus;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public interface TaskService {
     
-    Task create(Task task);
+    Task create(TaskRequestDto requestDto);
     
     Optional<Task> getById(Long id);
     
