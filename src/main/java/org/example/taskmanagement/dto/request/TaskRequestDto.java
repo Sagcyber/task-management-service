@@ -1,7 +1,8 @@
-package org.example.taskmanagement.request;
+package org.example.taskmanagement.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.taskmanagement.model.Category;
 
 @Getter
 @Setter
@@ -9,7 +10,7 @@ public class TaskRequestDto {
 
     private String title;
     private String description;
-    private Long categoryId;
+    private Category category;
     private Long userId;
     
 }

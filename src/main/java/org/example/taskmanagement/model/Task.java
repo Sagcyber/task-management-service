@@ -26,6 +26,10 @@ public class Task {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private Category category;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TaskStatus status = TaskStatus.NEW;
     
     @ManyToOne(fetch = FetchType.LAZY)
