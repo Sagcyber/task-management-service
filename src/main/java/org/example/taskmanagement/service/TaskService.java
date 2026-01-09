@@ -1,25 +1,24 @@
 package org.example.taskmanagement.service;
 
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.Task;
 import org.example.taskmanagement.model.TaskStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskService {
     
-    Task create(TaskRequestDto requestDto);
+    TaskResponseDto create(TaskRequestDto requestDto);
     
-    Optional<Task> getById(Long id);
+    TaskResponseDto getById(Long id);
     
-    List<Task> getAll();
+    List<TaskResponseDto> getAll();
     
-    List<Task> getByCategory(Category category);
+    List<TaskResponseDto> getByCategory(Category category);
     
-    List<Task> getByStatus(TaskStatus status);
+    List<TaskResponseDto> getByStatus(TaskStatus status);
     
     void deleteById(Long id);
-
 }

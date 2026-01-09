@@ -14,7 +14,6 @@ import org.example.taskmanagement.service.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,36 +25,45 @@ public class TaskServiceImpl implements TaskService {
     
     @Override
     public TaskResponseDto create(TaskRequestDto requestDto) {
-        
         User user = userRepository.findById(requestDto.getUserId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
+                                  .orElseThrow(() -> new RuntimeException("User not found"));
         
         Task task = taskMapper.toEntity(requestDto);
         task.setUser(user);
         
         Task savedTask = taskRepository.save(task);
-        
         return taskMapper.toDto(savedTask);
     }
     
     @Override
-    public Optional<Task> getById(Long id) {
-        return taskRepository.findById(id);
+    public TaskResponseDto getById(Long id) {
+        Task task = taskRepository.findById(id)
+                                  .orElseThrow(() -> new RuntimeException("Task not found"));
+        return taskMapper.toDto(task);
     }
     
     @Override
-    public List<Task> getAll() {
-        return taskRepository.findAll();
+    public List<TaskResponseDto> getAll() {
+        return taskRepository.findAll()
+                             .stream()
+                             .map(taskMapper::toDto)
+                             .toList();
     }
     
     @Override
-    public List<Task> getByCategory(Category category) {
-        return taskRepository.findByCategory(category);
+    public List<TaskResponseDto> getByCategory(Category category) {
+        return taskRepository.findByCategory(category)
+                             .stream()
+                             .map(taskMapper::toDto)
+                             .toList();
     }
     
     @Override
-    public List<Task> getByStatus(TaskStatus status) {
-        return taskRepository.findByStatus(status);
+    public List<TaskResponseDto> getByStatus(TaskStatus status) {
+        return taskRepository.findByStatus(status)
+                             .stream()
+                             .map(taskMapper::toDto)
+                             .toList();
     }
     
     @Override
