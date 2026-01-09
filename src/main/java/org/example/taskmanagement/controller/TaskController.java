@@ -1,5 +1,6 @@
 package org.example.taskmanagement.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanagement.dto.request.TaskRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
@@ -18,7 +19,7 @@ public class TaskController {
     private final TaskService taskService;
     
     @PostMapping
-    public TaskResponseDto create(@RequestBody TaskRequestDto requestDto) {
+    public TaskResponseDto create(@Valid @RequestBody TaskRequestDto requestDto) {
         return taskService.create(requestDto);
     }
     
@@ -46,5 +47,4 @@ public class TaskController {
     public void delete(@PathVariable Long id) {
         taskService.deleteById(id);
     }
-    
 }
