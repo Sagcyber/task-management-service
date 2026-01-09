@@ -1,6 +1,7 @@
 package org.example.taskmanagement.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.taskmanagement.dto.request.UserRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.exception.NotFoundException;
@@ -10,12 +11,11 @@ import org.example.taskmanagement.repository.UserRepository;
 import org.example.taskmanagement.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     
     private final UserRepository userRepository;
@@ -23,28 +23,40 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public UserResponseDto create(UserRequestDto dto) {
+        log.info("Creating user with username={}", dto.getUsername());
         User user = userMapper.toEntity(dto);
         User saved = userRepository.save(user);
+        log.info("User created with id={}", saved.getId());
         return userMapper.toDto(saved);
     }
     
     @Override
     public UserResponseDto getById(Long id) {
+        log.info("Getting user with id={}", id);
         User user = userRepository.findById(id)
-                            .orElseThrow(() -> new NotFoundException("User not found"));
+                            .orElseThrow(() -> {
+                                log.warn("User not found with id={} ", id);
+                                return new NotFoundException("User not found");
+                            });
+        log.info("User found: {}", user.getUsername());
         return userMapper.toDto(user);
     }
     
     @Override
     public List<UserResponseDto> getAll() {
-        return userRepository.findAll()
-                       .stream()
-                       .map(userMapper::toDto)
-                       .toList();
+        log.info("Getting all users");
+        List<UserResponseDto> list = userRepository.findAll()
+                                                   .stream()
+                                                   .map(userMapper::toDto)
+                                                   .toList();
+        log.info("Users found: {}", list.size());
+        return list;
     }
     
     @Override
     public void deleteById(Long id) {
+        log.info("Deleting user with id={}", id);
         userRepository.deleteById(id);
+        log.info("User deleted with id={}", id);
     }
 }
