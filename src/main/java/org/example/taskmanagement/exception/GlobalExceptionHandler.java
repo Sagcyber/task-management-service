@@ -1,30 +1,32 @@
 package org.example.taskmanagement.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        String errorMessage = ex.getBindingResult()
-                                      .getFieldErrors()
-                                      .get(0)
-                                      .getDefaultMessage();
+    public ResponseEntity<ApiErrorResponse> handleValidationException(
+            MethodArgumentNotValidException ex) {
         
-        ApiErrorResponse response = new ApiErrorResponse(errorMessage, 400);
+        String message = ex.getBindingResult()
+                           .getFieldErrors()
+                           .get(0)
+                           .getDefaultMessage();
         
-        return ResponseEntity.badRequest().body(response);
-    }
-    
-    public ResponseEntity<ApiErrorResponse> handleApiException(ApiException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(ex.getMessage(), ex.getStatus().value());
+        ApiErrorResponse response = new ApiErrorResponse(
+                message,
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now()
+        );
         
-        return ResponseEntity
-                       .status(ex.getStatus())
-                       .body(response);
+        return ResponseEntity.badRequest()
+                             .body(response);
     }
 }
