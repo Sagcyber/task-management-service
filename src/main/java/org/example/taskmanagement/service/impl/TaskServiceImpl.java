@@ -3,6 +3,7 @@ package org.example.taskmanagement.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanagement.dto.request.TaskRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
+import org.example.taskmanagement.exception.NotFoundException;
 import org.example.taskmanagement.mapper.TaskMapper;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.Task;
@@ -26,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto create(TaskRequestDto requestDto) {
         User user = userRepository.findById(requestDto.getUserId())
-                                  .orElseThrow(() -> new RuntimeException("User not found"));
+                                  .orElseThrow(() -> new NotFoundException("User not found"));
         
         Task task = taskMapper.toEntity(requestDto);
         task.setUser(user);
@@ -38,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto getById(Long id) {
         Task task = taskRepository.findById(id)
-                                  .orElseThrow(() -> new RuntimeException("Task not found"));
+                                  .orElseThrow(() -> new NotFoundException("Task not found"));
         return taskMapper.toDto(task);
     }
     

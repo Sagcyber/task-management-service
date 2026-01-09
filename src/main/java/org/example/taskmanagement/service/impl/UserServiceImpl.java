@@ -6,6 +6,7 @@ import org.example.taskmanagement.repository.UserRepository;
 import org.example.taskmanagement.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public User create(User user) {
+        user.setCreatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
     
