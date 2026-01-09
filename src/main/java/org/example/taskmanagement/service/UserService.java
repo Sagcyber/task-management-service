@@ -1,5 +1,7 @@
 package org.example.taskmanagement.service;
 
+import org.example.taskmanagement.dto.request.UserRequestDto;
+import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.model.User;
 
 import java.util.List;
@@ -7,11 +9,11 @@ import java.util.Optional;
 
 public interface UserService {
     
-    User create(User user);
+    UserResponseDto create(UserRequestDto dto);
     
-    Optional<User> getById(Long id);
+    UserResponseDto getById(Long id);
     
-    List<User> getAll();
+    List<UserResponseDto> getAll();
     
     void deleteById(Long id);
 }
