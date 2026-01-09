@@ -14,6 +14,7 @@ import org.example.taskmanagement.repository.UserRepository;
 import org.example.taskmanagement.service.TaskService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,6 +31,9 @@ public class TaskServiceImpl implements TaskService {
                                   .orElseThrow(() -> new NotFoundException("User not found"));
         
         Task task = taskMapper.toEntity(requestDto);
+        
+        task.setStatus(TaskStatus.NEW);
+        task.setCreatedAt(LocalDateTime.now());
         task.setUser(user);
         
         Task savedTask = taskRepository.save(task);

@@ -16,8 +16,6 @@ public class TaskMapper {
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
         task.setCategory(dto.getCategory());
-        task.setStatus(TaskStatus.NEW);
-        task.setCreatedAt(LocalDateTime.now());
         return task;
     }
     
