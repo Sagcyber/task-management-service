@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
                                       .getFieldErrors()
                                       .get(0)
@@ -18,5 +18,13 @@ public class GlobalExceptionHandler {
         ApiErrorResponse response = new ApiErrorResponse(errorMessage, 400);
         
         return ResponseEntity.badRequest().body(response);
+    }
+    
+    public ResponseEntity<ApiErrorResponse> handleApiException(ApiException ex) {
+        ApiErrorResponse response = new ApiErrorResponse(ex.getMessage(), ex.getStatus().value());
+        
+        return ResponseEntity
+                       .status(ex.getStatus())
+                       .body(response);
     }
 }
