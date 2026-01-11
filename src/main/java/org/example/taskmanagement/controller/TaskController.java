@@ -3,6 +3,7 @@ package org.example.taskmanagement.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.request.TaskUpdateRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.TaskStatus;
@@ -41,6 +42,12 @@ public class TaskController {
     @GetMapping("/status/{status}")
     public List<TaskResponseDto> getByStatus(@PathVariable TaskStatus status) {
         return taskService.getByStatus(status);
+    }
+    
+    @PutMapping("{/id}")
+    public TaskResponseDto update(@PathVariable Long id, @Valid @RequestBody
+                                  TaskUpdateRequestDto dto) {
+        return taskService.update(id, dto);
     }
     
     @DeleteMapping("/{id}")

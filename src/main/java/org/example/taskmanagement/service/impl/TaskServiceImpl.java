@@ -3,6 +3,7 @@ package org.example.taskmanagement.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.request.TaskUpdateRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.exception.NotFoundException;
 import org.example.taskmanagement.mapper.TaskMapper;
@@ -90,6 +91,21 @@ public class TaskServiceImpl implements TaskService {
                              .stream()
                              .map(taskMapper::toDto)
                              .toList();
+    }
+    
+    public TaskResponseDto update(Long id, TaskUpdateRequestDto dto) {
+        log.info("Updating task id={}", id);
+        
+        Task task = taskRepository.findById(id)
+                            .orElseThrow(()-> new NotFoundException("Task not found"));
+        
+        taskMapper.updateEntity(task, dto);
+        
+        Task updated = taskRepository.save(task);
+        
+        log.info("Task updated id={}, status={}", updated.getId(), updated.getStatus());
+        
+        return taskMapper.toDto(updated);
     }
     
     @Override

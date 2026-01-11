@@ -1,6 +1,7 @@
 package org.example.taskmanagement.service;
 
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.request.TaskUpdateRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.Task;
@@ -19,6 +20,8 @@ public interface TaskService {
     List<TaskResponseDto> getByCategory(Category category);
     
     List<TaskResponseDto> getByStatus(TaskStatus status);
+    
+    TaskResponseDto update(Long id, TaskUpdateRequestDto dto);
     
     void deleteById(Long id);
 }

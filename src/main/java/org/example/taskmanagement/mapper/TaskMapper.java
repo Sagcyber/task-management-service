@@ -1,6 +1,7 @@
 package org.example.taskmanagement.mapper;
 
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.request.TaskUpdateRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.model.Task;
 import org.example.taskmanagement.model.TaskStatus;
@@ -27,5 +28,12 @@ public class TaskMapper {
         dto.setStatus(task.getStatus().name());
         dto.setCategory(task.getCategory());
         return dto;
+    }
+    
+    public void updateEntity(Task task, TaskUpdateRequestDto dto) {
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+        task.setCategory(dto.getCategory());
+        task.setStatus(dto.getStatus());
     }
 }
