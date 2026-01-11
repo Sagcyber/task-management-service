@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 @EnableCaching
 class UserServiceCacheTest {
@@ -55,7 +57,7 @@ class UserServiceCacheTest {
         Mockito.verify(userRepository, Mockito.times(1))
                .findById(1L);
         
-        Assertions.assertEquals(first.getId(), second.getId());
+        assertEquals(first.getId(), second.getId());
     }
 }
 

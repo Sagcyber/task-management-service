@@ -1,11 +1,13 @@
 package org.example.taskmanagement.service.impl;
 
 import org.example.taskmanagement.dto.request.TaskRequestDto;
+import org.example.taskmanagement.dto.request.TaskUpdateRequestDto;
 import org.example.taskmanagement.dto.response.TaskResponseDto;
 import org.example.taskmanagement.exception.NotFoundException;
 import org.example.taskmanagement.mapper.TaskMapper;
 import org.example.taskmanagement.model.Category;
 import org.example.taskmanagement.model.Task;
+import org.example.taskmanagement.model.TaskStatus;
 import org.example.taskmanagement.model.User;
 import org.example.taskmanagement.repository.TaskRepository;
 import org.example.taskmanagement.repository.UserRepository;
@@ -43,7 +45,7 @@ public class TaskServiceTest {
     
     @Test
     void create_shouldCreateTaskSuccessfully() {
-        // given
+        
         TaskRequestDto dto = new TaskRequestDto();
         dto.setTitle("Test task");
         dto.setDescription("Description");
@@ -64,10 +66,8 @@ public class TaskServiceTest {
                     return task;
                 });
         
-        // when
         TaskResponseDto response = taskService.create(dto);
         
-        // then
         assertNotNull(response);
         assertEquals(10L, response.getId());
         assertEquals("Test task", response.getTitle());
@@ -79,7 +79,7 @@ public class TaskServiceTest {
     
     @Test
     void create_shouldThrowException_whenUserNotFound() {
-        // given
+        
         TaskRequestDto dto = new TaskRequestDto();
         dto.setTitle("Task");
         dto.setCategory(Category.HOME);
@@ -88,10 +88,55 @@ public class TaskServiceTest {
         when(userRepository.findById(99L))
                 .thenReturn(Optional.empty());
         
-        // when + then
         assertThrows(NotFoundException.class,
                      () -> taskService.create(dto));
         
         verify(taskRepository, never()).save(any());
+    }
+    
+    @Test
+    void update_shouldUpdateTaskSuccessfully() {
+        
+        TaskUpdateRequestDto dto = new TaskUpdateRequestDto();
+        dto.setTitle("Updated title");
+        dto.setDescription("Updated description");
+        dto.setCategory(Category.HEALTH);
+        dto.setStatus(TaskStatus.IN_PROGRESS);
+        
+        Task existingTask = new Task();
+        existingTask.setId(1L);
+        existingTask.setTitle("Old title");
+        existingTask.setCategory(Category.WORK);
+        existingTask.setStatus(TaskStatus.NEW);
+        
+        when(taskRepository.findById(1L))
+                .thenReturn(Optional.of(existingTask));
+        
+        when(taskRepository.save(any(Task.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        
+        TaskResponseDto response = taskService.update(1L, dto);
+        
+        assertEquals("Updated title", response.getTitle());
+        assertEquals(Category.HEALTH, response.getCategory());
+        assertEquals(TaskStatus.IN_PROGRESS.name(), response.getStatus());
+        
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).save(existingTask);
+    }
+    
+    @Test
+    void delete_shouldDeleteTask_whenTaskExists() {
+        
+        Task task = new Task();
+        task.setId(1L);
+        
+        when(taskRepository.findById(1L))
+                .thenReturn(Optional.of(task));
+        
+        taskService.deleteById(1L);
+        
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).delete(task);
     }
 }
