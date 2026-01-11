@@ -12,6 +12,7 @@ import org.example.taskmanagement.model.User;
 import org.example.taskmanagement.repository.TaskRepository;
 import org.example.taskmanagement.repository.UserRepository;
 import org.example.taskmanagement.service.UserService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,8 +38,9 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getById(Long id) {
-        log.info("Getting user with id={}", id);
+        log.info("Getting user from DB, id={}", id);
         User user = userRepository.findById(id)
                             .orElseThrow(() -> {
                                 log.warn("User not found with id={} ", id);
