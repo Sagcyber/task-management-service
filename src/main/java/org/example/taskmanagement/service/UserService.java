@@ -1,6 +1,7 @@
 package org.example.taskmanagement.service;
 
 import org.example.taskmanagement.dto.request.UserRequestDto;
+import org.example.taskmanagement.dto.request.UserUpdateRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.model.User;
 
@@ -16,4 +17,6 @@ public interface UserService {
     List<UserResponseDto> getAll();
     
     void deleteById(Long id);
+
+    UserResponseDto update(Long id, UserUpdateRequestDto dto);
 }

@@ -3,6 +3,7 @@ package org.example.taskmanagement.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.taskmanagement.dto.request.UserRequestDto;
+import org.example.taskmanagement.dto.request.UserUpdateRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.exception.NotFoundException;
 import org.example.taskmanagement.mapper.UserMapper;
@@ -58,5 +59,24 @@ public class UserServiceImpl implements UserService {
         log.info("Deleting user with id={}", id);
         userRepository.deleteById(id);
         log.info("User deleted with id={}", id);
+    }
+    
+    @Override
+    public UserResponseDto update(Long id, UserUpdateRequestDto dto) {
+        log.info("Updating user id={}", id);
+        
+        User user = userRepository.findById(id)
+                            .orElseThrow(() -> {
+                                log.warn("User not found for update, id={}", id);
+                                return new NotFoundException("User not found");
+                            });
+        
+        userMapper.updateEntity(user, dto);
+        
+        User updated = userRepository.save(user);
+        
+        log.info("User updated id={}, username={}", updated.getId(), updated.getUsername());
+        
+        return userMapper.toDto(updated);
     }
 }

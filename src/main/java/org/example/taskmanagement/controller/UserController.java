@@ -3,6 +3,7 @@ package org.example.taskmanagement.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanagement.dto.request.UserRequestDto;
+import org.example.taskmanagement.dto.request.UserUpdateRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,12 @@ public class UserController {
     @GetMapping
     public List<UserResponseDto> getAll() {
         return userService.getAll();
+    }
+    
+    @PutMapping("/{id}")
+    public UserResponseDto update(@PathVariable Long id, @Valid @RequestBody
+                                  UserUpdateRequestDto dto) {
+        return userService.update(id, dto);
     }
     
 }

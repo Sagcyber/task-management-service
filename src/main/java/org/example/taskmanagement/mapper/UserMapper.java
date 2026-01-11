@@ -1,6 +1,7 @@
 package org.example.taskmanagement.mapper;
 
 import org.example.taskmanagement.dto.request.UserRequestDto;
+import org.example.taskmanagement.dto.request.UserUpdateRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
 import org.example.taskmanagement.model.User;
 import org.springframework.stereotype.Component;
@@ -24,5 +25,10 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
         return dto;
+    }
+
+    public void updateEntity(User user, UserUpdateRequestDto dto) {
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
     }
 }
