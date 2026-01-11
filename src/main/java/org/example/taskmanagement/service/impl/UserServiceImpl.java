@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.taskmanagement.dto.request.UserRequestDto;
 import org.example.taskmanagement.dto.request.UserUpdateRequestDto;
 import org.example.taskmanagement.dto.response.UserResponseDto;
+import org.example.taskmanagement.exception.ConflictException;
 import org.example.taskmanagement.exception.NotFoundException;
 import org.example.taskmanagement.mapper.UserMapper;
 import org.example.taskmanagement.model.User;
+import org.example.taskmanagement.repository.TaskRepository;
 import org.example.taskmanagement.repository.UserRepository;
 import org.example.taskmanagement.service.UserService;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     
     private final UserRepository userRepository;
+    
     private final UserMapper userMapper;
+    
+    private final TaskRepository taskRepository;
     
     @Override
     public UserResponseDto create(UserRequestDto dto) {
@@ -57,7 +62,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         log.info("Deleting user with id={}", id);
-        userRepository.deleteById(id);
+        
+        User user = userRepository.findById(id)
+                                          .orElseThrow(() -> {
+                                              log.warn("User not found for delete, id={}", id);
+                                              return new NotFoundException("User not found");
+                                          });
+        boolean hasTasks = taskRepository.existsByUserId(user.getId());
+        
+        if(hasTasks) {
+            log.warn("Cannot delete user id={} because tasks exist", id);
+            throw new ConflictException("Cannot delete user with existing tasks");
+        }
+        
+        userRepository.delete(user);
         log.info("User deleted with id={}", id);
     }
     

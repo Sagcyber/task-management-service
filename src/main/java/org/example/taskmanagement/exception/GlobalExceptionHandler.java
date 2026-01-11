@@ -29,4 +29,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                              .body(response);
     }
+    
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiException(ApiException ex) {
+        
+        ApiErrorResponse response = new ApiErrorResponse(
+                ex.getMessage(),
+                ex.getStatus().value(),
+                LocalDateTime.now()
+        );
+        
+        return ResponseEntity
+                       .status(ex.getStatus())
+                       .body(response);
+    }
 }
