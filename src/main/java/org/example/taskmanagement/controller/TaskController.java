@@ -44,7 +44,7 @@ public class TaskController {
         return taskService.getByStatus(status);
     }
     
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public TaskResponseDto update(@PathVariable Long id, @Valid @RequestBody
                                   TaskUpdateRequestDto dto) {
         return taskService.update(id, dto);
